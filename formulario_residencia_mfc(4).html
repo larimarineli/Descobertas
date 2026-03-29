@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil de Aprendizagem · Residência MFC</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --teal:      #1D9E75;
+  --teal-lt:   #E1F5EE;
+  --teal-md:   #5DCAA5;
+  --teal-dk:   #0F6E56;
+  --amber:     #EF9F27;
+  --amber-lt:  #FDF3E2;
+  --coral:     #D85A30;
+  --coral-lt:  #FAECE7;
+  --blue:      #378ADD;
+  --blue-lt:   #EBF4FD;
+  --purple:    #7F77DD;
+  --purple-lt: #EEEDFE;
+  --bg:        #F5F4F0;
+  --surface:   #FFFFFF;
+  --border:    rgba(0,0,0,0.09);
+  --border-md: rgba(0,0,0,0.16);
+  --text:      #1A1A18;
+  --text-sec:  #5F5E5A;
+  --text-ter:  #9B9A96;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar-top {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: rgba(0,0,0,0.06);
+  z-index: 200;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--teal);
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: #0F2820;
+  padding: 2rem 2rem 3.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.site-header::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 260px; height: 260px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.site-header::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; right: 40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  border: 1px solid rgba(29,158,117,0.15);
+}
+
+.header-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 1; }
+
+.header-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(29,158,117,0.15);
+  color: var(--teal-md);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(29,158,117,0.2);
+}
+
+.header-dot {
+  width: 6px; height: 6px;
+  background: var(--teal-md);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.header-title {
+  font-family: 'Lora', serif;
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.25;
+  margin-bottom: 0.75rem;
+}
+
+.header-title em {
+  font-style: italic;
+  color: var(--teal-md);
+}
+
+.header-desc {
+  font-size: 14px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.6;
+  max-width: 540px;
+}
+
+/* ── NAV STEPS ── */
+.steps-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 3px;
+  z-index: 100;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.steps-nav::-webkit-scrollbar { display: none; }
+
+.steps-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  gap: 0;
+  padding: 0 1rem;
+}
+
+.step-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 14px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-ter);
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.step-btn:hover { color: var(--text-sec); }
+
+.step-btn.active {
+  color: var(--teal);
+  border-bottom-color: var(--teal);
+  font-weight: 500;
+}
+
+.step-btn.done { color: var(--teal-dk); }
+
+.step-num {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  font-weight: 500;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.step-btn.active .step-num {
+  background: var(--teal);
+  color: #fff;
+}
+
+.step-btn.done .step-num {
+  background: var(--teal-lt);
+  color: var(--teal-dk);
+}
+
+/* ── MAIN WRAPPER ── */
+.form-wrapper {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+/* ── SECTION PAGES ── */
+.form-page { display: none; animation: fadeUp 0.3s ease; }
+.form-page.active { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTION HEADER ── */
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.section-header-text {}
+
+.section-kicker {
+  font-size: 10px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.section-title {
+  font-family: 'Lora', serif;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.section-desc {
+  font-size: 13px;
+  color: var(--text-sec);
+  line-height: 1.6;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 14px;
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-title-num {
+  display: inline-flex;
+  width: 22px; height: 22px;
+  background: var(--teal-lt);
+  color: var(--teal-dk);
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 500;
+  align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.required-dot {
+  width: 5px; height: 5px;
+  background: var(--coral);
+  border-radius: 50%;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ── FORM ELEMENTS ── */
+.field { margin-bottom: 1.1rem; }
+.field:last-child { margin-bottom: 0; }
+
+.field-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-sec);
+  margin-bottom: 6px;
+}
+
+.field-hint {
+  font-size: 11px;
+  color: var(--text-ter);
+  margin-bottom: 6px;
+  display: block;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border-md);
+  border-radius: 10px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(29,158,117,0.1);
+  background: var(--surface);
+}
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235F5E5A' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 88px;
+  line-height: 1.55;
+}
+
+.row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ── CHECK / RADIO GRIDS ── */
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 7px;
+}
+
+.check-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+.check-grid.cols-1 { grid-template-columns: 1fr; }
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 12px;
+  border: 1px solid var(--border-md);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  background: var(--bg);
+  transition: all 0.15s;
+  user-select: none;
+  line-height: 1.4;
+}
+
+.check-item:hover {
+  border-color: var(--teal-md);
+  background: rgba(29,158,117,0.03);
+}
+
+.check-item.selected {
+  background: var(--teal-lt);
+  border-color: var(--teal-md);
+  color: var(--teal-dk);
+}
+
+.check-box {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--border-md);
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  margin-top: 1px;
+}
+
+.check-item.selected .check-box {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+.check-item.selected .check-box::after {
+  content: '';
+  width: 7px; height: 5px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg) translateY(-1px);
+  display: block;
+}
+
+.radio-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-md);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  background: var(--bg);
+  transition: all 0.15s;
+  user-select: none;
+  line-height: 1.4;
+  margin-bottom: 7px;
+}
+
+.radio-item:last-child { margin-bottom: 0; }
+
+.radio-item:hover {
+  border-color: var(--teal-md);
+  background: rgba(29,158,117,0.03);
+}
+
+.radio-item.selected {
+  background: var(--teal-lt);
+  border-color: var(--teal-md);
+  color: var(--teal-dk);
+}
+
+.radio-circle {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--border-md);
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  margin-top: 1px;
+}
+
+.radio-item.selected .radio-circle {
+  border-color: var(--teal);
+}
+
+.radio-item.selected .radio-circle::after {
+  content: '';
+  width: 8px; height: 8px;
+  background: var(--teal);
+  border-radius: 50%;
+  display: block;
+}
+
+/* ── VARK INPUTS ── */
+.vark-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.vark-box {
+  text-align: center;
+  padding: 14px 10px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border-md);
+  background: var(--bg);
+  transition: border-color 0.2s;
+}
+
+.vark-box:focus-within { border-color: var(--teal); background: var(--surface); }
+
+.vark-score-input {
+  width: 56px;
+  text-align: center;
+  font-size: 24px;
+  font-family: 'Lora', serif;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  padding: 4px 0;
+  border-bottom: 2px solid;
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+  display: block;
+  margin: 0 auto 6px;
+  transition: border-color 0.2s;
+}
+
+.vark-score-input:focus { border-bottom-color: var(--teal) !important; background: transparent; }
+
+.vark-label { font-size: 12px; font-weight: 500; }
+.vark-sublabel { font-size: 10px; color: var(--text-ter); margin-top: 2px; }
+
+.vark-v .vark-score-input { border-color: #378ADD; color: #185FA5; }
+.vark-a .vark-score-input { border-color: #EF9F27; color: #854F0B; }
+.vark-r .vark-score-input { border-color: #639922; color: #3B6D11; }
+.vark-k .vark-score-input { border-color: #7F77DD; color: #534AB7; }
+.vark-v .vark-label { color: #185FA5; }
+.vark-a .vark-label { color: #854F0B; }
+.vark-r .vark-label { color: #3B6D11; }
+.vark-k .vark-label { color: #534AB7; }
+
+/* ── EXTERNAL LINK PILL ── */
+.ext-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--teal-lt);
+  color: var(--teal-dk);
+  border: 1px solid rgba(29,158,117,0.25);
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.15s;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.ext-link:hover {
+  background: rgba(29,158,117,0.15);
+  border-color: var(--teal-md);
+}
+
+.ext-link svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+/* ── KOLB REFERENCE ── */
+.kolb-ref {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.kolb-ref-item {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.kolb-ref-label { font-weight: 500; display: block; margin-bottom: 2px; font-size: 12px; }
+
+/* ── STAR RATING ── */
+.star-rating { display: flex; gap: 8px; align-items: center; }
+
+.star-btn {
+  width: 36px; height: 36px;
+  border: none; background: none;
+  cursor: pointer;
+  font-size: 26px;
+  color: #D3D1C7;
+  transition: all 0.1s;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  padding: 0;
+}
+
+.star-btn:hover { transform: scale(1.15); }
+.star-btn.on { color: var(--amber); }
+
+.star-label {
+  font-size: 12px;
+  color: var(--text-ter);
+  margin-left: 8px;
+}
+
+/* ── NAVIGATION BUTTONS ── */
+.form-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-sec);
+  border-color: var(--border-md);
+}
+
+.btn-ghost:hover {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.btn-primary {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal);
+}
+
+.btn-primary:hover { background: var(--teal-dk); border-color: var(--teal-dk); }
+
+.btn-submit {
+  background: #0F2820;
+  color: #fff;
+  border-color: #0F2820;
+  padding: 12px 28px;
+  font-size: 15px;
+}
+
+.btn-submit:hover { background: #162E24; }
+
+.page-indicator {
+  font-size: 12px;
+  color: var(--text-ter);
+}
+
+/* ── SUCCESS STATE ── */
+.success-state {
+  display: none;
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+.success-icon {
+  width: 72px; height: 72px;
+  background: var(--teal-lt);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 32px;
+}
+
+.success-title {
+  font-family: 'Lora', serif;
+  font-size: 26px;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.success-desc {
+  font-size: 14px;
+  color: var(--text-sec);
+  max-width: 420px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── INFO BOX ── */
+.info-box {
+  background: var(--blue-lt);
+  border: 1px solid rgba(55,138,221,0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #185FA5;
+  line-height: 1.55;
+  margin-bottom: 1rem;
+}
+
+.info-box strong { font-weight: 500; }
+
+/* ── DIVIDER ── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.25rem 0;
+}
+
+/* ── SECTION BADGE ── */
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--bg);
+  border: 1px solid var(--border-md);
+  border-radius: 6px;
+  font-size: 10px;
+  padding: 3px 8px;
+  color: var(--text-ter);
+  margin-left: auto;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .row-2 { grid-template-columns: 1fr; }
+  .vark-grid { grid-template-columns: 1fr 1fr; }
+  .check-grid { grid-template-columns: 1fr; }
+  .check-grid.cols-2 { grid-template-columns: 1fr; }
+  .kolb-ref { grid-template-columns: 1fr; }
+  .site-header { padding: 1.5rem 1rem 3rem; }
+}
+
+/* spin */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* print */
+@media print {
+  .steps-nav, .progress-bar-top, .form-nav { display: none !important; }
+  .form-page { display: block !important; page-break-inside: avoid; }
+  .card { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar-top"><div class="progress-bar-fill" id="progress-fill"></div></div>
+
+<!-- ── HEADER ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-kicker">
+      <span class="header-dot"></span>
+      Residência em Medicina de Família e Comunidade
+    </div>
+    <h1 class="header-title">Perfil de <em>aprendizagem</em><br>do residente</h1>
+    <p class="header-desc">Este formulário é confidencial e serve para que a preceptoria compreenda seu perfil, suas preferências e necessidades, construindo um plano pedagógico personalizado para você.</p>
+  </div>
+</header>
+
+<!-- ── STEPS NAV ── -->
+<nav class="steps-nav">
+  <div class="steps-inner" id="steps-nav"></div>
+</nav>
+
+<!-- ── FORM ── -->
+<div class="form-wrapper">
+
+  <!-- ══ PAGE 1 — IDENTIFICAÇÃO ══ -->
+  <div class="form-page active" data-page="1">
+    <div class="section-header">
+      <div class="section-icon" style="background:#E1F5EE;">👤</div>
+      <div class="section-header-text">
+        <div class="section-kicker">Seção 1</div>
+        <h2 class="section-title">Identificação</h2>
+        <p class="section-desc">Dados pessoais e sua trajetória antes da residência.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">1</span> Dados pessoais <span class="required-dot" title="Obrigatório"></span></div>
+      <div class="row-2">
+        <div class="field">
+          <label class="field-label">Nome completo</label>
+          <input type="text" placeholder="Seu nome completo" data-key="nome">
+        </div>
+        <div class="field">
+          <label class="field-label">Ano da residência</label>
+          <select data-key="ano">
+            <option value="">Selecione</option>
+            <option>R1 – 1º ano</option>
+            <option>R2 – 2º ano</option>
+          </select>
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field">
+          <label class="field-label">Faculdade de origem</label>
+          <input type="text" placeholder="Nome da universidade" data-key="faculdade">
+        </div>
+        <div class="field">
+          <label class="field-label">Ano de formatura</label>
+          <input type="text" placeholder="Ex: 2023" data-key="formatura">
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">E-mail de contato</label>
+        <input type="email" placeholder="seu@email.com" data-key="email">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">2</span> Trajetória anterior</div>
+      <div class="field">
+        <label class="field-label">Experiências anteriores relevantes</label>
+        <span class="field-hint">Estágios, especializações, trabalhos, residências anteriores, voluntariado...</span>
+        <textarea placeholder="Descreva brevemente sua trajetória antes da residência..." data-key="experiencias"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Você teve alguma experiência em Atenção Primária à Saúde antes desta residência?</label>
+        <div id="exp-aps-radio"></div>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <span class="page-indicator">Página 1 de 7</span>
+      <button class="btn btn-primary" onclick="goTo(2)">Continuar <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 2 — ESTILOS DE APRENDIZAGEM ══ -->
+  <div class="form-page" data-page="2">
+    <div class="section-header">
+      <div class="section-icon" style="background:#EEEDFE;">🧠</div>
+      <div class="section-header-text">
+        <div class="section-kicker">Seção 2</div>
+        <h2 class="section-title">Estilos de aprendizagem</h2>
+        <p class="section-desc">Realize os dois inventários nos links abaixo e registre aqui seus resultados.</p>
+      </div>
+    </div>
+
+    <!-- VARK -->
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">3</span> Questionário VARK</div>
+      <div class="info-box">
+        <strong>O que é o VARK?</strong> Identifica sua preferência de aprendizagem em quatro modalidades: Visual, Auditivo (Aural), Leitura/Escrita e Cinestésico. Após responder, anote os pontos de cada dimensão abaixo.
+      </div>
+      <a class="ext-link" href="https://vark-learn.com/questionario/" target="_blank">
+        <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 2.5H3a1 1 0 0 0-1 1v7.5a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V8.5M8.5 2H12v3.5M12 2L6 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Acessar questionário VARK (vark-learn.com)
+      </a>
+      <div class="vark-grid">
+        <div class="vark-box vark-v">
+          <input type="number" class="vark-score-input" placeholder="0" min="0" max="20" data-key="vark_v">
+          <div class="vark-label">Visual</div>
+          <div class="vark-sublabel">Gráficos, mapas, diagramas</div>
+        </div>
+        <div class="vark-box vark-a">
+          <input type="number" class="vark-score-input" placeholder="0" min="0" max="20" data-key="vark_a">
+          <div class="vark-label">Auditivo</div>
+          <div class="vark-sublabel">Aulas, discussões, podcasts</div>
+        </div>
+        <div class="vark-box vark-r">
+          <input type="number" class="vark-score-input" placeholder="0" min="0" max="20" data-key="vark_r">
+          <div class="vark-label">Leitura</div>
+          <div class="vark-sublabel">Textos, anotações, resumos</div>
+        </div>
+        <div class="vark-box vark-k">
+          <input type="number" class="vark-score-input" placeholder="0" min="0" max="20" data-key="vark_k">
+          <div class="vark-label">Cinestésico</div>
+          <div class="vark-sublabel">Prática, simulações, casos</div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Perfil predominante identificado pelo questionário</label>
+        <span class="field-hint">Ex: Cinestésico, Multimodal (V+K), Visual...</span>
+        <input type="text" placeholder="Informe o perfil indicado ao final do teste" data-key="vark_perfil">
+      </div>
+      <div class="field">
+        <label class="field-label">Você se reconhece nesse perfil? Alguma observação?</label>
+        <textarea placeholder="Comentários livres sobre o resultado..." data-key="vark_obs"></textarea>
+      </div>
+    </div>
+
+    <!-- KOLB -->
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">4</span> Inventário de Estilos de Aprendizagem de Kolb</div>
+      <div class="info-box">
+        <strong>O que é o Kolb?</strong> Descreve como você processa e transforma experiências em aprendizagem, combinando dois eixos: como vivencia (concreto/abstrato) e como processa (ativo/reflexivo).
+      </div>
+      <a class="ext-link" href="https://www.cchla.ufpb.br/aprendizagem/" target="_blank">
+        <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 2.5H3a1 1 0 0 0-1 1v7.5a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V8.5M8.5 2H12v3.5M12 2L6 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Acessar inventário de Kolb — UFPB
+      </a>
+      <div class="kolb-ref">
+        <div class="kolb-ref-item" style="background:#E1F5EE;">
+          <span class="kolb-ref-label" style="color:#0F6E56;">Acomodador (EC + EA)</span>
+          Aprende fazendo e sentindo — prefere experiências práticas e adaptação a situações novas
+        </div>
+        <div class="kolb-ref-item" style="background:#EEEDFE;">
+          <span class="kolb-ref-label" style="color:#534AB7;">Divergente (EC + OR)</span>
+          Observa, imagina e sente — criativo, empático, bom em geração de ideias
+        </div>
+        <div class="kolb-ref-item" style="background:#FAECE7;">
+          <span class="kolb-ref-label" style="color:#712B13;">Convergente (CA + EA)</span>
+          Resolve problemas práticos — foco na aplicação técnica e eficiência
+        </div>
+        <div class="kolb-ref-item" style="background:#E6F1FB;">
+          <span class="kolb-ref-label" style="color:#185FA5;">Assimilador (CA + OR)</span>
+          Abstrato, teórico e reflexivo — prefere modelos conceituais e leitura
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Meu estilo predominante de Kolb</label>
+        <select data-key="kolb">
+          <option value="">Selecione após realizar o inventário</option>
+          <option>Acomodador (EC + EA)</option>
+          <option>Divergente (EC + OR)</option>
+          <option>Convergente (CA + EA)</option>
+          <option>Assimilador (CA + OR)</option>
+          <option>Multiestilo / sem predominância clara</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Observações sobre o resultado</label>
+        <textarea placeholder="Concordou com o resultado? O que chamou atenção?" data-key="kolb_obs"></textarea>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="goTo(1)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Voltar</button>
+      <span class="page-indicator">Página 2 de 7</span>
+      <button class="btn btn-primary" onclick="goTo(3)">Continuar <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 3 — PERSONALIDADE E PREFERÊNCIAS CLÍNICAS ══ -->
+  <div class="form-page" data-page="3">
+    <div class="section-header">
+      <div class="section-icon" style="background:#FDF3E2;">🌟</div>
+      <div class="section-header-text">
+        <div class="section-kicker">Seção 3</div>
+        <h2 class="section-title">Personalidade e preferências clínicas</h2>
+        <p class="section-desc">Autoconhecimento e os tipos de atendimento que mais te motivam.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">5</span> Teste de personalidade 16Personalities</div>
+      <div class="info-box">
+        O teste 16Personalities baseia-se no modelo MBTI e avalia dimensões como introversão/extroversão, intuição, tomada de decisão e estilo de vida. Pode ajudar a compreender como você se relaciona com pacientes, colegas e situações de pressão.
+      </div>
+      <a class="ext-link" href="https://www.16personalities.com/br/teste-de-personalidade" target="_blank">
+        <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 2.5H3a1 1 0 0 0-1 1v7.5a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V8.5M8.5 2H12v3.5M12 2L6 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Realizar teste 16Personalities (gratuito, ~12 min)
+      </a>
+      <div class="row-2">
+        <div class="field">
+          <label class="field-label">Meu tipo de personalidade</label>
+          <input type="text" placeholder="Ex: INFJ, ENFP, INTJ..." data-key="personality_type">
+        </div>
+        <div class="field">
+          <label class="field-label">Nome do perfil</label>
+          <input type="text" placeholder="Ex: Protagonista, Arquiteto..." data-key="personality_name">
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Algo que te surpreendeu ou que você já reconhecia em si mesmo?</label>
+        <textarea placeholder="Reflexões livres sobre o resultado..." data-key="personality_obs"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">6</span> Tipos de paciente que mais gosto de atender</div>
+      <span class="field-hint">Selecione todos que se aplicam — suas preferências ajudam a personalizar o plano pedagógico.</span>
+      <div class="check-grid" id="pacientes-grid"></div>
+      <div class="field" style="margin-top:12px;">
+        <label class="field-label">Outros / complementos</label>
+        <input type="text" placeholder="Descreva outras áreas de interesse clínico..." data-key="pacientes_outros">
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="goTo(2)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Voltar</button>
+      <span class="page-indicator">Página 3 de 7</span>
+      <button class="btn btn-primary" onclick="goTo(4)">Continuar <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 4 — EXPECTATIVAS E DIFICULDADES ══ -->
+  <div class="form-page" data-page="4">
+    <div class="section-header">
+      <div class="section-icon" style="background:#FAECE7;">🎯</div>
+      <div class="section-header-text">
+        <div class="section-kicker">Seção 4</div>
+        <h2 class="section-title">Expectativas e dificuldades</h2>
+        <p class="section-desc">O que você espera da residência e onde sente mais desafio.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">7</span> Expectativas para a residência</div>
+      <div class="field">
+        <label class="field-label">O que você espera aprender ou desenvolver?</label>
+        <textarea placeholder="Competências clínicas, habilidades interpessoais, gestão em saúde..." data-key="expectativas"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Perspectiva de atuação após a residência</label>
+        <span class="field-hint">Selecione todos que se aplicam.</span>
+        <div class="check-grid cols-2" id="perspectivas-grid"></div>
+      </div>
+      <div class="field">
+        <label class="field-label">Existe alguma preocupação específica em relação à residência?</label>
+        <textarea placeholder="Desafios que antecipa, receios, questões pessoais relevantes..." data-key="preocupacoes"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">8</span> Autoavaliação e dificuldades</div>
+      <div class="field">
+        <label class="field-label">Como você avalia sua autoconfiança clínica atualmente?</label>
+        <div id="autoconfianca-radio"></div>
+      </div>
+      <hr class="divider">
+      <div class="field">
+        <label class="field-label">Principais dificuldades clínicas ou acadêmicas</label>
+        <textarea placeholder="Ex: raciocínio clínico em urgências, comunicação de más notícias, saúde mental, leitura crítica de artigos..." data-key="dificuldades"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Em quais situações você sente mais insegurança?</label>
+        <span class="field-hint">Selecione todas que se aplicam.</span>
+        <div class="check-grid" id="inseguranca-grid"></div>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="goTo(3)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Voltar</button>
+      <span class="page-indicator">Página 4 de 7</span>
+      <button class="btn btn-primary" onclick="goTo(5)">Continuar <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 5 — TEMAS E METODOLOGIAS ══ -->
+  <div class="form-page" data-page="5">
+    <div class="section-header">
+      <div class="section-icon" style="background:#E6F1FB;">📚</div>
+      <div class="section-header-text">
+        <div class="section-kicker">Seção 5</div>
+        <h2 class="section-title">Temas e metodologias</h2>
+        <p class="section-desc">O que você quer aprender e como prefere aprender.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">9</span> Temas de aprendizagem</div>
+      <div class="field">
+        <label class="field-label">Qual tema você mais gostaria de aprofundar nesta residência?</label>
+        <textarea placeholder="Ex: abordagem centrada na pessoa, MBE, saúde da família, procedimentos, saúde do trabalhador..." data-key="tema_aprender"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Existe algum tema que você teme abordar na prática clínica? Por quê?</label>
+        <textarea placeholder="Ex: violência doméstica, suicídio, uso de álcool e drogas, saúde sexual..." data-key="tema_dificil"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Tem interesse em produção acadêmica (artigos, pesquisa, TCC)?</label>
+        <div id="pesquisa-radio"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">10</span> Conhecimento sobre metodologias ativas</div>
+      <p class="section-desc" style="margin-bottom:1rem;font-size:13px;">Marque os métodos que você já conhece.</p>
+      <div class="check-grid cols-2" id="metodos-conhece-grid"></div>
+      <div class="field" style="margin-top:12px;">
+        <label class="field-label">Outros métodos que conhece</label>
+        <input type="text" placeholder="Descreva métodos além dos listados..." data-key="metodos_outros">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">11</span> Metodologias que gostaria de experienciar</div>
+      <p class="section-desc" style="margin-bottom:1rem;font-size:13px;">Quais métodos você gostaria que fizessem parte do seu aprendizado?</p>
+      <div class="check-grid cols-2" id="metodos-quer-grid"></div>
+      <div class="field" style="margin-top:12px;">
+        <label class="field-label">Justifique suas escolhas ou sugira outros formatos</label>
+        <textarea placeholder="O que mais te ajuda a aprender? Tem alguma experiência positiva com alguma metodologia?" data-key="metodos_justif"></textarea>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="goTo(4)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Voltar</button>
+      <span class="page-indicator">Página 5 de 7</span>
+      <button class="btn btn-primary" onclick="goTo(6)">Continuar <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 6 — PRECEPTORIA E FEEDBACK ══ -->
+  <div class="form-page" data-page="6">
+    <div class="section-header">
+      <div class="section-icon" style="background:#E1F5EE;">🤝</div>
+      <div class="section-header-text">
+        <div class="section-kicker">Seção 6</div>
+        <h2 class="section-title">Preceptoria, feedback e bem-estar</h2>
+        <p class="section-desc">Como prefere receber orientação e como está chegando à residência.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">12</span> Preferências de feedback</div>
+      <div class="field">
+        <label class="field-label">Qual a forma de feedback que mais te ajuda a crescer?</label>
+        <span class="field-hint">Selecione todas que se aplicam.</span>
+        <div class="check-grid cols-2" id="feedback-grid"></div>
+      </div>
+      <div class="field">
+        <label class="field-label">Como você geralmente reage ao receber críticas sobre sua prática clínica?</label>
+        <div id="feedback-reacao-radio"></div>
+      </div>
+      <div class="field">
+        <label class="field-label">O que espera da preceptoria? O que seria ideal para seu desenvolvimento?</label>
+        <textarea placeholder="Tipo de supervisão, frequência dos feedbacks, abordagem preferida..." data-key="espera_preceptoria"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">13</span> Comunicação e equipe</div>
+      <div class="field">
+        <label class="field-label">Como você avalia sua comunicação com pacientes?</label>
+        <div id="comun-paciente-radio"></div>
+      </div>
+      <div class="field" style="margin-top:12px;">
+        <label class="field-label">Como você avalia sua comunicação com a equipe multiprofissional?</label>
+        <div id="comun-equipe-radio"></div>
+      </div>
+      <div class="field" style="margin-top:12px;">
+        <label class="field-label">Você tem experiência ou interesse em liderança na APS?</label>
+        <div id="lideranca-radio"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">14</span> Saúde e bem-estar</div>
+      <div class="field">
+        <label class="field-label">Como você está se sentindo ao iniciar / estar na residência?</label>
+        <span class="field-hint">Clique nas estrelas para avaliar de 1 (esgotado) a 5 (ótimo).</span>
+        <div class="star-rating" id="bem-estar-stars">
+          <button type="button" class="star-btn" data-val="1" onclick="setStar('bem-estar-stars', 1, 'bem_estar')">★</button>
+          <button type="button" class="star-btn" data-val="2" onclick="setStar('bem-estar-stars', 2, 'bem_estar')">★</button>
+          <button type="button" class="star-btn" data-val="3" onclick="setStar('bem-estar-stars', 3, 'bem_estar')">★</button>
+          <button type="button" class="star-btn" data-val="4" onclick="setStar('bem-estar-stars', 4, 'bem_estar')">★</button>
+          <button type="button" class="star-btn" data-val="5" onclick="setStar('bem-estar-stars', 5, 'bem_estar')">★</button>
+          <span class="star-label" id="bem-estar-label">Clique para avaliar</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Você tem ou já teve acompanhamento psicológico ou psiquiátrico?</label>
+        <div id="saude-mental-radio"></div>
+      </div>
+      <div class="field">
+        <label class="field-label">Quais estratégias você usa para lidar com estresse e carga de trabalho?</label>
+        <textarea placeholder="Ex: atividade física, meditação, hobbies, terapia, convívio familiar..." data-key="autocuidado"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">Existe alguma condição de saúde ou situação pessoal que a preceptoria deva conhecer? <span style="color:var(--text-ter);font-weight:400;">(opcional)</span></label>
+        <span class="field-hint">Esta informação é estritamente confidencial e usada apenas para adequar o suporte pedagógico.</span>
+        <textarea placeholder="Somente se desejar compartilhar..." data-key="saude_obs"></textarea>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="goTo(5)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Voltar</button>
+      <span class="page-indicator">Página 6 de 7</span>
+      <button class="btn btn-primary" onclick="goTo(7)">Continuar <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 7 — REVISÃO E ENVIO ══ -->
+  <div class="form-page" data-page="7">
+    <div class="section-header">
+      <div class="section-icon" style="background:#E1F5EE;">✅</div>
+      <div class="section-header-text">
+        <div class="section-kicker">Seção 7</div>
+        <h2 class="section-title">Considerações finais</h2>
+        <p class="section-desc">Espaço livre e revisão das suas respostas antes de enviar.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-num">15</span> Espaço livre</div>
+      <div class="field">
+        <label class="field-label">Sugestões, perguntas ou qualquer coisa que gostaria que a preceptoria soubesse</label>
+        <textarea style="min-height:120px;" placeholder="Espaço totalmente livre — pode escrever o que quiser..." data-key="obs_livres"></textarea>
+      </div>
+    </div>
+
+    <div class="card" id="resumo-card">
+      <div class="card-title"><span class="card-title-num">16</span> Resumo das suas respostas</div>
+      <div id="resumo-content" style="font-size:13px;color:var(--text-sec);line-height:1.7;"></div>
+    </div>
+
+    <div class="card" style="border-color:rgba(29,158,117,0.2);background:var(--teal-lt);">
+      <p style="font-size:12.5px;color:var(--teal-dk);line-height:1.6;">
+        <strong>Confidencialidade:</strong> Todas as informações fornecidas neste formulário são estritamente confidenciais e serão utilizadas exclusivamente pela preceptoria para fins pedagógicos, com o objetivo de personalizar seu processo de aprendizagem na residência.
+      </p>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="goTo(6)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Voltar</button>
+      <span class="page-indicator">Página 7 de 7</span>
+      <button class="btn btn-submit" onclick="submitForm()">
+        Enviar formulário
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ SUCCESS ══ -->
+  <div class="success-state" id="success-state">
+    <div class="success-icon">🌿</div>
+    <h2 class="success-title">Formulário enviado!</h2>
+    <p class="success-desc">Obrigado por dedicar seu tempo a esse processo. Suas respostas foram enviadas com sucesso para a preceptoria, que irá analisá-las para construir um plano pedagógico alinhado ao seu perfil.</p>
+    <p class="success-desc" style="margin-top:0.75rem;">Bom início de residência!</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:2rem;">
+      <button class="btn btn-primary" onclick="downloadResponses()">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 2v8M4 7l3.5 3.5L11 7M2 13h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Salvar minhas respostas
+      </button>
+      <button class="btn btn-ghost" onclick="location.reload()">Preencher novamente</button>
+    </div>
+  </div>
+
+</div><!-- /form-wrapper -->
+
+<script>
+// ════════════════════════════════════════════
+// DATA & STATE
+// ════════════════════════════════════════════
+const TOTAL_PAGES = 7;
+let currentPage = 1;
+let formData = {};
+let starValues = {};
+
+const STEPS = [
+  { label: "Identificação" },
+  { label: "Aprendizagem" },
+  { label: "Personalidade" },
+  { label: "Expectativas" },
+  { label: "Temas" },
+  { label: "Preceptoria" },
+  { label: "Revisão" },
+];
+
+// ════════════════════════════════════════════
+// OPTIONS
+// ════════════════════════════════════════════
+const PACIENTES = [
+  "Doenças crônicas", "Saúde mental", "Gestantes", "Saúde da mulher",
+  "Puericultura", "Doenças transmissíveis", "Doenças de pele",
+  "Saúde do idoso", "Saúde do adolescente", "Saúde do trabalhador",
+  "Urgências na APS", "Cuidados paliativos", "Outras"
+];
+
+const PERSPECTIVAS = [
+  "UBS / APS pública", "Consultório privado",
+  "Medicina de família como especialidade base", "Gestão em saúde",
+  "Docência / preceptoria", "Pesquisa acadêmica",
+  "Especialização adicional", "Ainda não decidi"
+];
+
+const INSEGURANCAS = [
+  "Urgências e emergências", "Saúde mental", "Violência doméstica",
+  "Comunicação de diagnósticos graves", "Procedimentos",
+  "Saúde sexual e reprodutiva", "Situações com crianças",
+  "Visitas domiciliares", "Abordagem familiar"
+];
+
+const METODOS = [
+  "Observação / demonstração do preceptor",
+  "ABP – Aprendizagem Baseada em Problemas",
+  "ABI/PBI – Baseada em Projeto/Intervenção",
+  "Dramatização / role play",
+  "Preceptor minuto",
+  "Caso clínico",
+  "Oficina / workshop",
+  "SNAPPS",
+  "Sala de aula invertida",
+  "Seminário"
+];
+
+const FEEDBACK_PREFS = [
+  "Feedback imediato após o atendimento",
+  "Feedback em reunião reservada",
+  "Feedback escrito",
+  "Feedback em grupo com colegas",
+  "Feedback por observação direta",
+  "Portfólio reflexivo"
+];
+
+const AUTOCONFIANCA_OPTS = [
+  "Muito baixa — me sinto inseguro(a) na maioria das situações",
+  "Baixa — tenho muitas dúvidas frequentemente",
+  "Moderada — me viro, mas preciso de apoio constante",
+  "Boa — me sinto confortável na maioria dos casos",
+  "Alta — tenho boa segurança clínica no geral"
+];
+
+const PESQUISA_OPTS = [
+  "Sim, muito interesse",
+  "Interesse moderado",
+  "Pouco interesse",
+  "Nenhum interesse no momento"
+];
+
+const FEEDBACK_REACAO_OPTS = [
+  "Fico ansioso(a) e levo para o lado pessoal",
+  "Aceito racionalmente, mas demoro a processar",
+  "Consigo receber bem e usar para crescer",
+  "Depende muito de quem e como o feedback é dado"
+];
+
+const COMUN_OPTS = [
+  "Tenho muita dificuldade",
+  "Tenho algumas dificuldades",
+  "Me saio razoavelmente bem",
+  "Me sinto muito à vontade"
+];
+
+const LIDERANCA_OPTS = [
+  "Sim, tenho experiência e interesse",
+  "Tenho interesse, mas pouca experiência",
+  "Não tenho interesse no momento",
+  "Nunca pensei sobre isso"
+];
+
+const SAUDE_MENTAL_OPTS = [
+  "Sim, atualmente em acompanhamento",
+  "Sim, já tive no passado",
+  "Não, mas considero buscar",
+  "Não, e não sinto necessidade no momento",
+  "Prefiro não informar"
+];
+
+const EXP_APS_OPTS = [
+  "Sim, atuei em UBS / ESF",
+  "Sim, em estágio obrigatório durante a graduação",
+  "Apenas em estágio extracurricular / voluntário",
+  "Não tive experiência prévia em APS"
+];
+
+const STAR_LABELS = ["", "Esgotado(a)", "Cansado(a)", "Regular", "Bem", "Ótimo(a)"];
+
+// ════════════════════════════════════════════
+// BUILD COMPONENTS
+// ════════════════════════════════════════════
+function buildCheckGrid(containerId, opts, dataKey) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  opts.forEach(opt => {
+    const el = document.createElement('label');
+    el.className = 'check-item';
+    el.innerHTML = `<div class="check-box"></div><span>${opt}</span>`;
+    el.onclick = () => {
+      el.classList.toggle('selected');
+      collectCheckGrid(containerId, dataKey);
+    };
+    container.appendChild(el);
+  });
+}
+
+function buildRadioGroup(containerId, opts, dataKey) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  opts.forEach(opt => {
+    const el = document.createElement('div');
+    el.className = 'radio-item';
+    el.innerHTML = `<div class="radio-circle"></div><span>${opt}</span>`;
+    el.onclick = () => {
+      container.querySelectorAll('.radio-item').forEach(r => r.classList.remove('selected'));
+      el.classList.add('selected');
+      formData[dataKey] = opt;
+    };
+    container.appendChild(el);
+  });
+}
+
+function collectCheckGrid(containerId, dataKey) {
+  const selected = [];
+  document.querySelectorAll(`#${containerId} .check-item.selected span`).forEach(s => selected.push(s.textContent));
+  formData[dataKey] = selected;
+}
+
+// ════════════════════════════════════════════
+// STAR RATING
+// ════════════════════════════════════════════
+function setStar(containerId, val, dataKey) {
+  starValues[dataKey] = val;
+  formData[dataKey] = val;
+  const container = document.getElementById(containerId);
+  container.querySelectorAll('.star-btn').forEach(b => {
+    b.classList.toggle('on', parseInt(b.dataset.val) <= val);
+  });
+  const lbl = document.getElementById(containerId.replace('-stars', '-label'));
+  if (lbl) lbl.textContent = STAR_LABELS[val] || '';
+}
+
+// ════════════════════════════════════════════
+// STEPS NAV
+// ════════════════════════════════════════════
+function buildStepsNav() {
+  const nav = document.getElementById('steps-nav');
+  STEPS.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'step-btn' + (i === 0 ? ' active' : '');
+    btn.id = `step-${i+1}`;
+    btn.innerHTML = `<span class="step-num">${i+1}</span> ${s.label}`;
+    btn.onclick = () => goTo(i+1);
+    nav.appendChild(btn);
+  });
+}
+
+function updateStepsNav(page) {
+  document.querySelectorAll('.step-btn').forEach((btn, i) => {
+    btn.classList.remove('active', 'done');
+    if (i + 1 === page) btn.classList.add('active');
+    else if (i + 1 < page) btn.classList.add('done');
+  });
+}
+
+// ════════════════════════════════════════════
+// COLLECT ALL FORM INPUTS
+// ════════════════════════════════════════════
+function collectInputs() {
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.dataset.key;
+    if (el.tagName === 'SELECT' || el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+      formData[key] = el.value;
+    }
+  });
+}
+
+// ════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════
+function goTo(page) {
+  collectInputs();
+  document.querySelectorAll('.form-page').forEach(p => p.classList.remove('active'));
+  const target = document.querySelector(`[data-page="${page}"]`);
+  if (target) {
+    target.classList.add('active');
+    currentPage = page;
+    updateStepsNav(page);
+    updateProgress(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (page === 7) buildResumo();
+  }
+}
+
+function updateProgress(page) {
+  const pct = Math.round((page / TOTAL_PAGES) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+// ════════════════════════════════════════════
+// RESUMO
+// ════════════════════════════════════════════
+function buildResumo() {
+  collectInputs();
+  const d = formData;
+  const rows = [
+    ["Nome", d.nome],
+    ["Ano", d.ano],
+    ["Faculdade", d.faculdade],
+    ["Formatura", d.formatura],
+    ["Perfil VARK", d.vark_perfil || `V:${d.vark_v||'—'} A:${d.vark_a||'—'} R:${d.vark_r||'—'} K:${d.vark_k||'—'}`],
+    ["Estilo Kolb", d.kolb],
+    ["Personalidade", d.personality_type ? `${d.personality_type} — ${d.personality_name||''}` : '—'],
+    ["Autoconfiança", d.autoconfianca],
+    ["Interesse em pesquisa", d.pesquisa],
+    ["Comunicação c/ pacientes", d.comun_paciente],
+    ["Comunicação c/ equipe", d.comun_equipe],
+    ["Bem-estar autorrelatado", d.bem_estar ? `${d.bem_estar}/5` : '—'],
+    ["Pacientes preferidos", Array.isArray(d.pacientes) ? d.pacientes.join(', ') : '—'],
+    ["Expectativas", d.expectativas],
+    ["Dificuldades", d.dificuldades],
+    ["Tema para aprofundar", d.tema_aprender],
+    ["Observações livres", d.obs_livres],
+  ];
+
+  const html = rows.filter(r => r[1]).map(([k,v]) =>
+    `<div style="display:flex;gap:1rem;padding:5px 0;border-bottom:1px solid var(--border);">
+      <span style="min-width:160px;color:var(--text-ter);font-size:12px;">${k}</span>
+      <span style="flex:1;color:var(--text);">${v}</span>
+    </div>`
+  ).join('') || '<p style="color:var(--text-ter);">Preencha as seções anteriores para ver o resumo aqui.</p>';
+
+  document.getElementById('resumo-content').innerHTML = html;
+}
+
+// ════════════════════════════════════════════
+// SUBMIT — Web3Forms
+// ════════════════════════════════════════════
+async function submitForm() {
+  collectInputs();
+
+  const btn = document.querySelector('.btn-submit');
+  btn.disabled = true;
+  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="animation:spin 1s linear infinite"><circle cx="8" cy="8" r="6" stroke="rgba(255,255,255,0.3)" stroke-width="2"/><path d="M8 2a6 6 0 0 1 6 6" stroke="white" stroke-width="2" stroke-linecap="round"/></svg> Enviando...`;
+
+  // Flatten arrays to readable strings
+  const payload = {};
+  Object.entries(formData).forEach(([k, v]) => {
+    payload[k] = Array.isArray(v) ? v.join(', ') : (v || '');
+  });
+
+  // Web3Forms required fields
+  payload['access_key'] = '95dcf786-cebf-43a4-90af-1d99ed0b38b7';
+  payload['subject']    = `Formulário MFC — ${formData.nome || 'Residente'}`;
+  payload['from_name']  = formData.nome || 'Residente MFC';
+  payload['data_envio'] = new Date().toLocaleString('pt-BR');
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      document.querySelectorAll('.form-page').forEach(p => p.style.display = 'none');
+      document.getElementById('success-state').style.display = 'block';
+      document.getElementById('progress-fill').style.width = '100%';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      showSubmitError(`Erro ao enviar: ${data.message || 'Tente novamente.'}`);
+      btn.disabled = false;
+      btn.innerHTML = `Tentar novamente <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    }
+  } catch (err) {
+    showSubmitError('Sem conexão com a internet. Verifique sua rede e tente novamente.');
+    btn.disabled = false;
+    btn.innerHTML = `Tentar novamente <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  }
+}
+
+function showSubmitError(msg) {
+  let el = document.getElementById('submit-error');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'submit-error';
+    el.style.cssText = 'background:#FAECE7;border:1px solid rgba(216,90,48,0.3);border-radius:10px;padding:10px 14px;font-size:13px;color:#712B13;margin-top:12px;line-height:1.5;';
+    document.querySelector('.form-nav:last-of-type').after(el);
+  }
+  el.textContent = msg;
+}
+
+function downloadResponses() {
+  collectInputs();
+  const json = JSON.stringify(formData, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `residente_${(formData.nome || 'anonimo').replace(/\s+/g,'_').toLowerCase()}_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+buildStepsNav();
+updateProgress(1);
+
+buildCheckGrid('pacientes-grid', PACIENTES, 'pacientes');
+buildCheckGrid('perspectivas-grid', PERSPECTIVAS, 'perspectivas');
+buildCheckGrid('inseguranca-grid', INSEGURANCAS, 'insegurancas');
+buildCheckGrid('metodos-conhece-grid', METODOS, 'metodos_conhece');
+buildCheckGrid('metodos-quer-grid', METODOS, 'metodos_quer');
+buildCheckGrid('feedback-grid', FEEDBACK_PREFS, 'feedback_pref');
+
+buildRadioGroup('exp-aps-radio', EXP_APS_OPTS, 'exp_aps');
+buildRadioGroup('autoconfianca-radio', AUTOCONFIANCA_OPTS, 'autoconfianca');
+buildRadioGroup('pesquisa-radio', PESQUISA_OPTS, 'pesquisa');
+buildRadioGroup('feedback-reacao-radio', FEEDBACK_REACAO_OPTS, 'feedback_reacao');
+buildRadioGroup('comun-paciente-radio', COMUN_OPTS, 'comun_paciente');
+buildRadioGroup('comun-equipe-radio', COMUN_OPTS, 'comun_equipe');
+buildRadioGroup('lideranca-radio', LIDERANCA_OPTS, 'lideranca');
+buildRadioGroup('saude-mental-radio', SAUDE_MENTAL_OPTS, 'saude_mental');
+</script>
+</body>
+</html>
